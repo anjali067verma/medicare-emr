@@ -15,11 +15,8 @@ import { NewAppointmentModal } from "./NewAppointmentModal";
 import {
   Plus,
   Search,
-  Filter,
   RefreshCw,
-  UserCheck,
   Stethoscope,
-  ChevronDown,
   Bell,
 } from "lucide-react";
 

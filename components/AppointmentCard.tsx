@@ -1,16 +1,13 @@
 import React from "react";
 import { Appointment, AppointmentStatus } from "../types";
 import {
-  Clock,
   MapPin,
   Video,
   Phone,
   CheckCircle,
   XCircle,
   User,
-  Activity,
-  Calendar,
-  MoreHorizontal,
+  Activity
 } from "lucide-react";
 
 interface Props {

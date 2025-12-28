@@ -55,7 +55,7 @@ export const CalendarWidget: React.FC<Props> = ({
   };
 
   const jumpToToday = () => {
-    const [y, m, d] = MOCK_TODAY_STR.split("-").map(Number);
+    const [y, m] = MOCK_TODAY_STR.split("-").map(Number);
     // Update view to December 2025
     setViewDate(new Date(y, m - 1, 1));
     // Select the specific date

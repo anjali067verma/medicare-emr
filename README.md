@@ -2,11 +2,6 @@
 
 This repository contains the implementation for the "Appointment Scheduling and Queue Management" feature (Feature B). It provides a full-stack experience with a React frontend and a Python backend implementation of the core business logic.
 
-## 🛠 Prerequisites
-
-*   **Node.js** (v18 or higher) - Required to run the React Frontend.
-*   **Python** (v3.8 or higher) - Required to run the backend logic script.
-
 ## 🚀 Quick Start
 
 ### 1. Frontend (React Application)

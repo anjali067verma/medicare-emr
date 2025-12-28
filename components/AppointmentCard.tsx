@@ -7,7 +7,7 @@ import {
   CheckCircle,
   XCircle,
   User,
-  Activity
+  Activity,
 } from "lucide-react";
 
 interface Props {
@@ -79,6 +79,13 @@ export const AppointmentCard: React.FC<Props> = ({
 
   const styles = getStatusStyles(appointment.status);
 
+  // Format Date for display (e.g., "Dec 28")
+  const dateObj = new Date(appointment.date);
+  const dateStr = dateObj.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+
   return (
     <div
       className={`group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden`}
@@ -86,12 +93,15 @@ export const AppointmentCard: React.FC<Props> = ({
       <div className="flex flex-1 p-4 gap-4">
         {/* Time Column */}
         <div className="flex flex-col items-center justify-start pt-1 min-w-[60px]">
-          <span className="text-lg font-bold text-gray-900">
+          <span className="text-lg font-bold text-gray-900 leading-none">
             {appointment.time}
           </span>
-          <span className="text-xs font-medium text-gray-500">
+          <span className="text-xs font-medium text-gray-500 mt-1">
             {appointment.duration}m
           </span>
+          <div className="mt-2 flex items-center gap-1 text-[10px] font-semibold text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded">
+            {dateStr}
+          </div>
         </div>
 
         {/* Separator */}

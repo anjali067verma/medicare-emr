@@ -1,0 +1,5 @@
+{
+  "name": "MediCare EMR",
+  "description": "Electronic Medical Record system feature for Appointment Scheduling and Queue Management.",
+  "requestFramePermissions": []
+}

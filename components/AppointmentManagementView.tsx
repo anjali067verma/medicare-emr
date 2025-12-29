@@ -45,13 +45,6 @@ const FILTER_OPTIONS = [
     label: "Phone",
     check: (app: Appointment) => app.mode === AppointmentMode.Phone,
   },
-  {
-    id: "Urgent",
-    label: "Urgent Care",
-    check: (app: Appointment) =>
-      app.type.toLowerCase().includes("urgent") ||
-      app.type.toLowerCase().includes("emergency"),
-  },
 ];
 
 // Mocking "Now" to be in the middle of the mock data day
@@ -67,7 +60,6 @@ export const AppointmentManagementView: React.FC = () => {
     "In-Person",
     "Video",
     "Phone",
-    "Urgent",
   ]);
 
   // Data Fetching Wrapper
@@ -177,14 +169,10 @@ export const AppointmentManagementView: React.FC = () => {
     const isInPerson = app.mode === AppointmentMode.InPerson;
     const isVideo = app.mode === AppointmentMode.Video;
     const isPhone = app.mode === AppointmentMode.Phone;
-    const isUrgent =
-      app.type.toLowerCase().includes("urgent") ||
-      app.type.toLowerCase().includes("emergency");
 
     if (activeFilters.includes("In-Person") && isInPerson) filterMatch = true;
     if (activeFilters.includes("Video") && isVideo) filterMatch = true;
     if (activeFilters.includes("Phone") && isPhone) filterMatch = true;
-    if (activeFilters.includes("Urgent") && isUrgent) filterMatch = true;
 
     return dateMatch && filterMatch;
   });

@@ -1,7 +1,5 @@
-import { AppointmentManagementView } from './components/AppointmentManagementView';
+import { AppointmentManagementView } from "./components/AppointmentManagementView";
 
 export default function App() {
-  return (
-    <AppointmentManagementView />
-  );
+  return <AppointmentManagementView />;
 }

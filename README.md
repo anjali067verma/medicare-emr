@@ -1,12 +1,12 @@
 # MediCare EMR - Appointment & Queue Management
 
-This repository contains the implementation for the "Appointment Scheduling and Queue Management" feature. It features a modern React frontend with a simulated backend service layer that mimics real-world API interactions and business logic.
+This repository contains the implementation for the "Appointment Scheduling and Queue Management" feature. It features a modern React frontend and a Python backend service implementation.
 
 ## 🚀 Quick Start
 
 ### 1. Frontend (React Application)
 
-The frontend acts as the main user interface. It communicates with a TypeScript service layer (`appointmentService.ts`) that replicates the logic defined in the Python backend assignment.
+The frontend acts as the main user interface. It communicates with a TypeScript service layer that replicates the logic defined in the Python backend.
 
 ```bash
 # Install dependencies
@@ -20,7 +20,7 @@ Open [http://localhost:5173](http://localhost:5173) to view the application.
 
 ### 2. Backend Logic (Python)
 
-The `appointment_service.py` file contains the canonical implementation of the business logic, data models, and conflict detection algorithms.
+The `appointment_service.py` file contains the canonical implementation of the business logic.
 
 To run the logic verification suite:
 
@@ -29,53 +29,53 @@ To run the logic verification suite:
 python appointment_service.py
 ```
 
-_Note: In this browser-based demo, the React app uses `services/appointmentService.ts` to mimic this Python logic directly in the browser._
+## 🧩 Technical Implementation Details
 
-## 🧩 Implemented Features
+### 1. Data Fetching & Query Structure
 
-### 1. Advanced Data Fetching & Filtering
+Instead of a raw REST endpoint, the application uses a structured **Filter Object** pattern (similar to a GraphQL query variable structure) to ensure efficient data retrieval.
 
-The application implements a hybrid filtering approach:
+The `get_appointments(filters)` function accepts a `filters` dictionary/object with the following structure:
 
-- **Server-Side Simulation**: When a specific date is selected via the **Calendar**, the service is queried specifically for that date (`get_appointments({ date: ... })`).
-- **Client-Side Refinement**: When switching between **Upcoming** and **Past** tabs, the application fetches broader datasets and filters them based on the **Mock System Time** (set to Dec 28, 2025, 12:00 PM).
+```typescript
+interface AppointmentFilters {
+  date?: string; // Exact match (YYYY-MM-DD)
+  status?: string; // Enum match (Confirmed, Upcoming, etc.)
+  doctorName?: string; // Exact match
+}
+```
 
-### 2. Calendar Widget Integration (Task 2)
+**How it works in the App:**
 
-- Clicking a date on the sidebar calendar updates the local state (`selectedDate`).
-- This triggers a specific data fetch for the selected date.
-- The view automatically switches to **"Day View"** to display the specific appointments for that day.
+- **Calendar View**: When a user selects a date, the app dispatches a query: `{ date: "2025-12-28" }`. The backend filters the memory store and returns _only_ that day's records.
+- **Tab Views**: For "Upcoming" or "Past" tabs, the app fetches a broader dataset (empty filter) and refines the view client-side using the mock system time.
 
-### 3. Tab Navigation Logic (Task 3)
+### 2. Data Consistency & Conflict Detection
 
-- **Upcoming**: Shows appointments scheduled _after_ the mock system time.
-- **Day View**: Shows appointments strictly matching the selected calendar date.
-- **Past**: Shows appointments _before_ the mock system time or with status 'Completed'.
-- **All**: Shows the complete history.
+The `appointment_service.py` ensures data consistency through a strict **Conflict Detection Algorithm** that runs before any creation or update operation.
 
-### 4. Conflict Detection
+**The Logic:**
+When a new appointment is requested, the system iterates through all existing active appointments (excluding cancelled ones) for that specific doctor and date. It enforces consistency using the following condition:
 
-Both the Python script and the TypeScript service implement conflict detection:
+```python
+if (new_start < existing_end) and (new_end > existing_start):
+    raise ValueError("Time conflict detected...")
+```
 
-- Logic: `(NewStart < ExistingEnd) and (NewEnd > ExistingStart)`
-- Prevents booking a doctor for overlapping time slots during appointment creation.
+This ensures that:
 
-### 5. View Filters
-
-Sidebar checkboxes allow filtering by appointment mode:
-
-- **In-Person**
-- **Video**
-- **Urgent Care** (Filters by appointment type text)
+1.  No doctor can be double-booked.
+2.  Data integrity is maintained on the server side before writing to the database (or in-memory list).
+3.  Race conditions in the UI are caught by the backend validation.
 
 ## 📂 Project Structure
 
-- **`src/components/AppointmentManagementView.tsx`**: Main controller. Handles state, tab logic, and coordinates data fetching.
-- **`src/components/CalendarWidget.tsx`**: Renders the calendar grid and handles date selection events.
-- **`src/services/appointmentService.ts`**: The "Mock Backend". It implements `get_appointments`, `create_appointment`, and `update_appointment_status` with artificial network delay.
-- **`appointment_service.py`**: The reference Python implementation of the business logic.
+- **`src/components/AppointmentManagementView.tsx`**: **Primary Frontend Implementation**. Handles the UI, state, and interaction logic.
+- **`appointment_service.py`**: **Primary Backend Implementation**. Contains the Python logic for creating appointments and checking conflicts.
+- **`src/services/appointmentService.ts`**: TypeScript mirror of the Python backend for browser simulation.
+- **`src/components/CalendarWidget.tsx`**: Modular component for date selection.
 
 ## 🛠 Tech Stack
 
-- **Frontend**: React 18, TypeScript, Tailwind CSS, Vite, Lucide React (Icons).
-- **Backend Logic**: Python 3.
+- **Frontend**: React 18, TypeScript, Tailwind CSS, Vite.
+- **Backend**: Python 3.
